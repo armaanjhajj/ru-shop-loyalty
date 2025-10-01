@@ -1,7 +1,8 @@
 import { z } from 'zod'
 import type { Customer, ApiResponse } from './types'
 
-const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL
+// Use proxy to avoid CORS and allow custom headers from browser
+const BASE_URL = typeof window === 'undefined' ? process.env.NEXT_PUBLIC_BACKEND_URL : '/api/proxy'
 
 if (!BASE_URL) {
   // This will help in dev to notice missing env. In prod, NEXT_PUBLIC must be set.
