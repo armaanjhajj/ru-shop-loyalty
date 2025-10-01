@@ -9,11 +9,13 @@ if (!BASE_URL) {
   console.warn('NEXT_PUBLIC_BACKEND_URL is not set')
 }
 
-const addOrUpdateSchema = z.object({
+export const addOrUpdateSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   email: z.string().email().optional().or(z.literal('').transform(() => undefined)),
   phone: z.string().optional().or(z.literal('').transform(() => undefined)),
 })
+
+export type AddOrUpdateInput = z.infer<typeof addOrUpdateSchema>
 
 export function withAuthHeaders(password: string): HeadersInit {
   return {
@@ -52,7 +54,7 @@ export async function listCustomers(query: string, password: string): Promise<Cu
   return (json as unknown as Customer[]) || []
 }
 
-export async function addOrUpdate(payload: { name: string; email?: string; phone?: string }, password: string): Promise<Customer> {
+export async function addOrUpdate(payload: AddOrUpdateInput, password: string): Promise<Customer> {
   const parsed = addOrUpdateSchema.safeParse(payload)
   if (!parsed.success) {
     throw new Error(parsed.error.errors[0]?.message || 'Invalid input')

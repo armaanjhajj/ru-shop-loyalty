@@ -4,21 +4,17 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PasswordGate from '@/components/PasswordGate'
 import CustomerCard from '@/components/CustomerCard'
 import type { Customer } from '@/lib/types'
-import { addOrUpdate, listCustomers } from '@/lib/api'
+import { addOrUpdate, listCustomers, addOrUpdateSchema, type AddOrUpdateInput } from '@/lib/api'
 import { safeLocalStorageGet } from '@/lib/utils'
 import { z } from 'zod'
 
-const addSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email().optional().or(z.literal('').transform(() => undefined)),
-  phone: z.string().optional().or(z.literal('').transform(() => undefined)),
-})
+const addSchema = addOrUpdateSchema
 
 export default function Page() {
   const [query, setQuery] = useState('')
   const [matches, setMatches] = useState<Customer[]>([])
   const [loadingList, setLoadingList] = useState(false)
-  const [addForm, setAddForm] = useState<{ name: string; email?: string; phone?: string }>({ name: '', email: '', phone: '' })
+  const [addForm, setAddForm] = useState<AddOrUpdateInput>({ name: '', email: '', phone: '' })
   const [adding, setAdding] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
   const debounceRef = useRef<number | null>(null)
