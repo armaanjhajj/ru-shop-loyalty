@@ -1,11 +1,9 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import PasswordGate from '@/components/PasswordGate'
 import CustomerCard from '@/components/CustomerCard'
 import type { Customer } from '@/lib/types'
 import { addOrUpdate, listCustomers, addOrUpdateSchema, type AddOrUpdateInput } from '@/lib/api'
-import { safeLocalStorageGet } from '@/lib/utils'
 import { z } from 'zod'
 
 const addSchema = addOrUpdateSchema
@@ -18,8 +16,8 @@ export default function Page() {
   const [adding, setAdding] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
   const debounceRef = useRef<number | null>(null)
-
-  const password = useMemo(() => safeLocalStorageGet('app_password') || '', [])
+  // Password is injected server-side in the proxy using APP_PASSWORD env
+  const password = ''
 
   const showToast = useCallback((message: string) => {
     setToast(message)
@@ -81,7 +79,6 @@ export default function Page() {
   }
 
   return (
-    <PasswordGate>
       <div className="grid gap-6">
         <section className="card p-5">
           <h2 className="text-base font-semibold mb-3">Add Customer</h2>
@@ -132,7 +129,6 @@ export default function Page() {
           )}
         </div>
       </div>
-    </PasswordGate>
   )
 }
 

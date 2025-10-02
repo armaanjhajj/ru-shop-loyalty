@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import type { Customer } from '@/lib/types'
 import { applySpend, resetReward } from '@/lib/api'
-import { formatCurrency, formatDate, progressPercent, safeLocalStorageGet } from '@/lib/utils'
+import { formatCurrency, formatDate, progressPercent } from '@/lib/utils'
 import clsx from 'clsx'
 
 type Props = {
@@ -17,7 +17,8 @@ export default function CustomerCard({ customer, onChange }: Props) {
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
   const progress = useMemo(() => progressPercent(customer.Spend, customer.Goal), [customer.Spend, customer.Goal])
-  const password = useMemo(() => safeLocalStorageGet('app_password') || '', [])
+  // Password is injected server-side by the API proxy
+  const password = ''
 
   function showToast(type: 'success' | 'error', message: string) {
     setToast({ type, message })

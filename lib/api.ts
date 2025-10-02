@@ -21,7 +21,8 @@ export type AddOrUpdateInput = z.infer<typeof addOrUpdateSchema>
 export function withAuthHeaders(password: string): HeadersInit {
   return {
     'Content-Type': 'application/json',
-    'X-Auth': password,
+    // If password is blank, the /api/proxy will inject APP_PASSWORD
+    ...(password ? { 'X-Auth': password } : {}),
   }
 }
 
